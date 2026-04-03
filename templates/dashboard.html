@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enterprise GenAI Proxy Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+        }
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .hover-scale {
+            transition: transform 0.2s ease-in-out;
+        }
+        .hover-scale:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body class="min-h-screen p-8">
+    <div class="max-w-6xl mx-auto">
+        <!-- Header -->
+        <header class="mb-12 text-center">
+            <h1 class="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-emerald-400 mb-4 tracking-tight">
+                Enterprise GenAI Proxy Dashboard
+            </h1>
+            <p class="text-slate-400 font-medium tracking-wide text-sm uppercase">Monitoring Cost, Tokens, and Security</p>
+        </header>
+
+        <!-- Top Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+            <div class="glass-panel p-6 rounded-2xl hover-scale">
+                <div class="flex items-center gap-3 mb-2">
+                    <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <h3 class="text-slate-400 text-sm font-semibold uppercase tracking-wider">Total Est. Cost</h3>
+                </div>
+                <div class="text-3xl font-bold text-emerald-400">${{ "%.6f"|format(total_cost) }}</div>
+            </div>
+            <div class="glass-panel p-6 rounded-2xl hover-scale">
+                <div class="flex items-center gap-3 mb-2">
+                    <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    <h3 class="text-slate-400 text-sm font-semibold uppercase tracking-wider">Tokens Processed</h3>
+                </div>
+                <div class="text-3xl font-bold text-blue-400">{{ total_tokens }}</div>
+            </div>
+            <div class="glass-panel p-6 rounded-2xl flex items-center justify-between hover-scale">
+                <div>
+                    <div class="flex items-center gap-3 mb-2">
+                        <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                        <h3 class="text-slate-400 text-sm font-semibold uppercase tracking-wider">Active Departments</h3>
+                    </div>
+                    <div class="text-3xl font-bold text-indigo-400">{{ stats|length }}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Department Breakdown Table -->
+        <div class="glass-panel rounded-2xl overflow-hidden shadow-xl">
+            <div class="p-6 border-b border-slate-700/50 bg-slate-800/20">
+                <h2 class="text-xl font-semibold text-white">Department Usage Breakdown</h2>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm text-slate-300">
+                    <thead class="text-xs text-slate-400 uppercase bg-slate-800/50">
+                        <tr>
+                            <th scope="col" class="px-6 py-4">Department</th>
+                            <th scope="col" class="px-6 py-4">Total Tokens</th>
+                            <th scope="col" class="px-6 py-4">Estimated Cost (USD)</th>
+                            <th scope="col" class="px-6 py-4 text-right">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for stat in stats %}
+                        <tr class="border-b border-slate-700/50 hover:bg-slate-700/30 transition-colors">
+                            <td class="px-6 py-4 font-medium text-white flex items-center gap-2">
+                                <div class="w-2 h-2 rounded-full bg-blue-500"></div>
+                                {{ stat.department }}
+                            </td>
+                            <td class="px-6 py-4 font-mono">{{ stat.total_tokens }}</td>
+                            <td class="px-6 py-4 font-mono">${{ "%.6f"|format(stat.total_cost) }}</td>
+                            <td class="px-6 py-4 text-right">
+                                <span class="bg-emerald-500/10 text-emerald-400 text-xs font-semibold px-2.5 py-1 rounded-full inline-flex items-center">
+                                    <span class="w-2 h-2 mr-1.5 bg-emerald-500 rounded-full animate-pulse"></span> Active
+                                </span>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="4" class="px-6 py-12 text-center text-slate-500 italic">
+                                <svg class="w-12 h-12 mx-auto mb-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path></svg>
+                                No proxy requests recorded yet. Start talking to your proxy endpoint!
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- API Info -->
+        <div class="mt-12 text-center text-sm text-slate-400">
+            Proxy Endpoint: <code class="text-pink-400 font-mono font-medium tracking-tight bg-pink-400/10 px-3 py-1.5 rounded-md border border-pink-400/20">POST /v1/chat/completions</code>
+        </div>
+    </div>
+</body>
+</html>

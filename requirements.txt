@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+litellm
+presidio-analyzer
+presidio-anonymizer
+sqlalchemy
+jinja2
+python-dotenv
+httpx
