@@ -1,0 +1,27 @@
+services:
+  gateway:
+    build: .
+    container_name: genai-gateway
+    ports:
+      - "8000:8000"
+    volumes:
+      # Mount the database to the host so we don't lose cost metrics when container restarts
+      - ./gateway.db:/app/gateway.db
+    # Pass along any env keys like LANGFLOW_API_KEY if they exist in a local .env
+    env_file:
+      - .env
+    command: uvicorn main:app --host 0.0.0.0 --port 8000
+    restart: unless-stopped
+
+  ui:
+    build: .
+    container_name: chainlit-ui
+    ports:
+      - "8501:8501"
+    environment:
+      # Use Docker's internal DNS to point the UI directly to the gateway container
+      - PROXY_URL=http://gateway:8000/v1/chat/completions
+    command: chainlit run chainlit_app.py --port 8501 --host 0.0.0.0
+    depends_on:
+      - gateway
+    restart: unless-stopped

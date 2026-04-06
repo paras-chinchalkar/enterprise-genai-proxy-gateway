@@ -4,3 +4,4 @@ __pycache__/
 .env
 gateway.db
 *.log
+jenkins_home/

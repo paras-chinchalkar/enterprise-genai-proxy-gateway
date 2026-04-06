@@ -131,7 +131,7 @@ async def proxy_completions(request: Request, client_key: APIKey = Depends(verif
             "created": int(time.time()),
             "model": model_to_use,
             "choices": [{"index": 0, "message": {"role": "assistant", "content": unmasked_text}, "finish_reason": "stop"}],
-            "usage": {"prompt_tokens": prompt_tokens, "completion_tokens": completion_tokens, "total_tokens": total_tokens}
+            "usage": {"prompt_tokens": prompt_tokens, "completion_tokens": completion_tokens, "total_tokens": total_tokens, "estimated_cost": cost}
         }
         return res_dict
 
@@ -175,6 +175,8 @@ async def proxy_completions(request: Request, client_key: APIKey = Depends(verif
         )
         
         res_dict = response.model_dump()
+        if "usage" in res_dict and res_dict["usage"] is not None:
+            res_dict["usage"]["estimated_cost"] = cost
         return res_dict
 
 @app.get("/dashboard", response_class=HTMLResponse)
