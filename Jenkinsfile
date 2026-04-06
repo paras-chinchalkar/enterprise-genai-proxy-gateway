@@ -32,8 +32,8 @@ pipeline {
         stage('Build Orchestration') {
             steps {
                 echo 'Building Gateway & UI Docker Images. Injecting Spacy NLP models.'
-                // Uses docker-compose to build the architecture
-                sh 'docker-compose build'
+                // Uses docker compose to build the architecture
+                sh 'docker compose build'
             }
         }
 
@@ -47,7 +47,7 @@ pipeline {
         stage('Deploy (Integration Environment)') {
             steps {
                 echo 'Rolling out GenAI containers...'
-                sh 'docker-compose up -d'
+                sh 'docker compose up -d'
             }
         }
         
@@ -70,7 +70,7 @@ pipeline {
         }
         failure {
             echo 'CRITICAL FAILURE: Rolling back changes.'
-            sh 'docker-compose down'
+            sh 'docker compose down'
         }
     }
 }
