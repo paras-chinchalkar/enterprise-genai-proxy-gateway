@@ -14,9 +14,9 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Critical LLMOps Step:
-# Pre-download the heavy 400MB Spacy model into the Docker layer.
+# Pre-download the lightweight 12MB Spacy model into the Docker layer.
 # This prevents it from downloading dynamically on every container start/scale.
-RUN python -m spacy download en_core_web_lg
+RUN python -m spacy download en_core_web_sm
 
 # Copy application files
 COPY . .
