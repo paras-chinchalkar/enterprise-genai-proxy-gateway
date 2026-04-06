@@ -21,6 +21,14 @@ pipeline {
             }
         }
 
+        stage('Setup Environment') {
+            steps {
+                echo 'Generating missing ignored files so docker-compose does not crash...'
+                sh 'touch .env'
+                sh 'touch gateway.db'
+            }
+        }
+
         stage('Build Orchestration') {
             steps {
                 echo 'Building Gateway & UI Docker Images. Injecting Spacy NLP models.'
