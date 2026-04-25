@@ -23,6 +23,8 @@ import json
 import pathlib
 import time
 from dotenv import load_dotenv
+import litellm
+from litellm import completion
 
 load_dotenv()
 
