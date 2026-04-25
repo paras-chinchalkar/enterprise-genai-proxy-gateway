@@ -21,8 +21,8 @@ RUN python -m spacy download en_core_web_sm
 # Copy application files
 COPY . .
 
-# Expose ports for both the Gateway and the UI
-EXPOSE 8000 8501
+# Expose the default port (Railway overrides this via $PORT env var)
+EXPOSE 8000
 
-# Default command (will be overridden by docker-compose for the UI service)
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Railway injects $PORT at runtime — use shell form so the variable is expanded
+CMD uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}

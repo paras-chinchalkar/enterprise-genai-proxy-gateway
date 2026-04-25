@@ -1,10 +1,12 @@
 fastapi
-uvicorn
+uvicorn[standard]
 litellm
 presidio-analyzer
 presidio-anonymizer
+spacy
 sqlalchemy
+psycopg2-binary
 jinja2
 python-dotenv
 httpx
-chainlit
+redis

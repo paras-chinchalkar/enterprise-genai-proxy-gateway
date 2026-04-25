@@ -428,6 +428,7 @@
                             <th>Department</th>
                             <th>Total Tokens</th>
                             <th>Estimated Cost (USD)</th>
+                            <th>Req/min (Redis)</th>
                             <th style="text-align: right;">Status</th>
                         </tr>
                     </thead>
@@ -440,6 +441,13 @@
                             </td>
                             <td style="font-family: monospace; font-size: 0.95rem;">{{ stat.total_tokens }}</td>
                             <td style="font-family: monospace; font-size: 0.95rem;">${{ "%.6f"|format(stat.total_cost) }}</td>
+                            <td style="font-family: monospace; font-size: 0.95rem;">
+                                {% if stat.requests_this_minute >= 0 %}
+                                    <span style="color: var(--accent-warning);">{{ stat.requests_this_minute }} / 20</span>
+                                {% else %}
+                                    <span style="color: var(--text-muted);">Redis N/A</span>
+                                {% endif %}
+                            </td>
                             <td style="text-align: right;">
                                 <span class="status-badge">
                                     <div class="status-dot"></div> Active
@@ -448,7 +456,7 @@
                         </tr>
                         {% else %}
                         <tr>
-                            <td colspan="4" style="text-align: center; padding: 2rem; color: var(--text-muted);">
+                            <td colspan="5" style="text-align: center; padding: 2rem; color: var(--text-muted);">
                                 No proxy requests recorded yet. Try the playground!
                             </td>
                         </tr>
