@@ -87,27 +87,7 @@ uvicorn main:app --reload
 # API Docs: http://localhost:8000/docs
 ```
 
-## Quick Start (Docker)
 
-Not recommended — use Railway.com for managed deployment. For local Docker testing only:
-
-```bash
-# Requires Docker Desktop + docker-compose installed locally
-docker build -t genai-gateway .
-docker run -p 8000:8000 --env-file .env genai-gateway
-```
-
-## Deploying to Railway.com
-
-1. Push this repo to GitHub
-2. Create a new Railway project → **Deploy from GitHub repo**
-3. Add the following **Environment Variables** in Railway dashboard:
-   - `GROQ_API_KEY` = your Groq API key
-   - `DEFAULT_MODEL` = `groq/llama-3.3-70b-versatile`
-   - `DATABASE_URL` = PostgreSQL URL (add Railway PostgreSQL plugin)
-   - `REDIS_URL` = Redis URL (add Railway Redis plugin, optional)
-   - `RATE_LIMIT_RPM` = `20`
-4. Railway uses `railway.json` → Dockerfile build → auto-deploys on push
 
 ## Pre-Seeded API Keys
 
